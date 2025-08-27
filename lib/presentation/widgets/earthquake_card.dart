@@ -20,6 +20,7 @@ class EarthquakeCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         elevation: 2,
+        // ignore: deprecated_member_use
         shadowColor: Colors.black.withOpacity(0.1),
         child: InkWell(
           onTap: onTap,
@@ -34,6 +35,7 @@ class EarthquakeCard extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                     color: AppColors.getMagnitudeColor(earthquake.magnitude)
+                        // ignore: deprecated_member_use
                         .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
@@ -60,6 +62,7 @@ class EarthquakeCard extends StatelessWidget {
                             fontSize: 10,
                             color: AppColors.getMagnitudeColor(
                                     earthquake.magnitude)
+                                // ignore: deprecated_member_use
                                 .withOpacity(0.7),
                           ),
                         ),

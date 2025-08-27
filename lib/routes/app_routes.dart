@@ -5,16 +5,16 @@ import '../presentation/screens/earthquake_list_screen.dart';
 import '../presentation/screens/earthquake_detail_screen.dart';
 import '../presentation/screens/info_screen.dart';
 import '../presentation/screens/settings_screen.dart';
-import '../presentation/screens/analytics_screen.dart'; // NEW
-import '../presentation/screens/map_screen.dart'; // NEW
-import '../presentation/screens/checklist_screen.dart'; // NEW
-import '../presentation/screens/splash_screen.dart'; // NEW
+import '../presentation/screens/analytics_screen.dart';
+import '../presentation/screens/map_screen.dart';
+import '../presentation/screens/checklist_screen.dart';
+import '../presentation/screens/splash_screen.dart';
 
 import '../data/models/earthquake_model.dart';
 
 class AppRoutes {
   // Core
-  static const String splash = '/splash'; // NEW
+  static const String splash = '/splash';
   static const String home = '/';
   static const String earthquakeList = '/earthquakes';
   static const String earthquakeDetail = '/earthquake-detail';
@@ -43,6 +43,7 @@ class AppRoutes {
       );
     } else if (name == info) {
       return MaterialPageRoute(builder: (_) => const InfoScreen());
+      // ignore: unrelated_type_equality_checks
     } else if (name == settings) {
       return MaterialPageRoute(builder: (_) => const SettingsScreen());
     } else if (name == analytics) {
@@ -65,9 +66,9 @@ class AppRoutes {
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final begin =  Offset(1.0, 0.0);
-        final end = Offset.zero;
-        final curve = Curves.easeInOut;
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
         final tween =
             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         final offsetAnimation = animation.drive(tween);
@@ -95,6 +96,7 @@ class AppRoutes {
       );
     } else if (name == info) {
       return _buildPageRoute(page: const InfoScreen(), settings: settings);
+      // ignore: unrelated_type_equality_checks
     } else if (name == settings) {
       return _buildPageRoute(page: const SettingsScreen(), settings: settings);
     } else if (name == analytics) {

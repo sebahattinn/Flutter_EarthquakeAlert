@@ -87,6 +87,7 @@ class InfoScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -99,6 +100,7 @@ class InfoScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: color.withOpacity(0.1),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(16)),
@@ -218,6 +220,7 @@ class InfoScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),

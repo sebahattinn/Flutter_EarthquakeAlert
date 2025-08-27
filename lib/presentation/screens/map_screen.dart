@@ -56,10 +56,12 @@ class MapScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
                       color: Colors.white.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(.08), blurRadius: 8)
                       ],
                     ),
@@ -117,6 +119,7 @@ class MapScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: color.withOpacity(.85),
                 borderRadius: BorderRadius.circular(12),
               ),

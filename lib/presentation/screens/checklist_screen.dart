@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/safe_scroll_wrapper.dart'; // <- ekle
+import '../widgets/safe_scroll_wrapper.dart';
 
 class ChecklistScreen extends StatefulWidget {
   const ChecklistScreen({super.key});

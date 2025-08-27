@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../core/constants/app_colors.dart';
 import '../../routes/app_routes.dart';
 import '../providers/earthquake_provider.dart';

@@ -24,7 +24,6 @@ class DepremTurkiyeApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: AppColors.primary,
-          // pubspec’te özel font tanımlamadıysan bu satır opsiyonel
           fontFamily: 'Montserrat',
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(

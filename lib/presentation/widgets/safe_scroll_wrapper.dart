@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Her sayfada taşmaları engelleyen, ekranı güvenli alan + kaydırılabilir hale getiren sarmalayıcı.
-/// Kullanım:
-/// body: SafeScrollWrapper(child: <mevcut içerik>)
 class SafeScrollWrapper extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;

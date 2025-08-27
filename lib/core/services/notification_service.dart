@@ -95,12 +95,12 @@ class NotificationService {
   }
 
   void _onNotificationTapped(NotificationResponse response) {
-    // TODO: payload üzerinden detay ekranına yönlendirme
+   
     // final payload = response.payload;
   }
 
   @pragma('vm:entry-point')
   static void _onNotificationTappedBackground(NotificationResponse response) {
-    // TODO: arka planda tıklama (Android)
+   
   }
 }

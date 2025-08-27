@@ -27,6 +27,7 @@ class SettingsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
@@ -51,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
                       title: const Text('Bildirimleri Aç'),
                       subtitle: const Text('Deprem bildirimleri alın'),
                       value: provider.notificationsEnabled,
-                      activeColor: AppColors.primary,
+                      activeThumbColor: AppColors.primary,
                       onChanged: (value) => provider.toggleNotifications(value),
                     ),
                     const Divider(),
@@ -66,6 +67,7 @@ class SettingsScreen extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
+                          // ignore: deprecated_member_use
                           color: AppColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -105,6 +107,7 @@ class SettingsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),

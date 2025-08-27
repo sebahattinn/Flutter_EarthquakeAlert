@@ -114,12 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               provider.earthquakes.first.magnitude),
                           AppColors.getMagnitudeColor(
                                   provider.earthquakes.first.magnitude)
+                              // ignore: deprecated_member_use
                               .withOpacity(0.7),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
+                          // ignore: deprecated_member_use
                           color: Colors.black.withOpacity(0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
@@ -365,6 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     showGeneralDialog(
       barrierDismissible: false,
+      // ignore: deprecated_member_use
       barrierColor: Colors.black.withOpacity(0.05),
       context: context,
       pageBuilder: (_, __, ___) {
@@ -375,6 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
+                // ignore: deprecated_member_use
                 BoxShadow(color: Colors.black.withOpacity(.08), blurRadius: 16)
               ],
             ),
@@ -440,6 +444,7 @@ class _QuickBtn extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
+            // ignore: deprecated_member_use
             BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 8)
           ],
         ),
@@ -476,8 +481,10 @@ class _StatCard extends StatelessWidget {
       width: 160,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        // ignore: deprecated_member_use
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
+        // ignore: deprecated_member_use
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Column(
@@ -492,6 +499,7 @@ class _StatCard extends StatelessWidget {
           ),
           Text(
             title,
+            // ignore: deprecated_member_use
             style: TextStyle(fontSize: 12, color: color.withOpacity(0.8)),
             textAlign: TextAlign.center,
           ),

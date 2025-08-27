@@ -34,15 +34,19 @@ class AnalyticsScreen extends StatelessWidget {
         };
         for (final q in last24) {
           final m = q.magnitude;
-          if (m < 3)
+          if (m < 3) {
             buckets['2-2.9'] = buckets['2-2.9']! + 1;
-          else if (m < 4)
+          } else if (m < 4)
+            // ignore: curly_braces_in_flow_control_structures
             buckets['3-3.9'] = buckets['3-3.9']! + 1;
           else if (m < 5)
+            // ignore: curly_braces_in_flow_control_structures
             buckets['4-4.9'] = buckets['4-4.9']! + 1;
           else if (m < 6)
+            // ignore: curly_braces_in_flow_control_structures
             buckets['5-5.9'] = buckets['5-5.9']! + 1;
           else
+            // ignore: curly_braces_in_flow_control_structures
             buckets['6+'] = buckets['6+']! + 1;
         }
 
@@ -112,7 +116,7 @@ class AnalyticsScreen extends StatelessWidget {
                       SizedBox(
                         height: 220,
                         child: points.isEmpty
-                            ? _EmptyChart(text: 'Yeterli veri yok')
+                            ? const _EmptyChart(text: 'Yeterli veri yok')
                             : LineChart(LineChartData(
                                 minY: 0,
                                 maxY: (series
@@ -236,6 +240,7 @@ class _StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(.05),
               blurRadius: 8,
               offset: const Offset(0, 4))
