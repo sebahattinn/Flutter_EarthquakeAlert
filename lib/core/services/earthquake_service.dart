@@ -1,26 +1,42 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
+
 import '../../data/models/earthquake_model.dart';
 
 class EarthquakeService {
   static const String apiUrl =
-      'https://api.orhanaydogdu.com.tr/deprem/kandilli/live';
+      'https://api.orhanaydogdu.com.tr/deprem/kandilli/live'; //kandilli api.
 
   Future<List<Earthquake>> fetchEarthquakes({int limit = 50}) async {
     try {
-      final response = await http.get(
-        Uri.parse('$apiUrl?limit=$limit'),
-      );
+      final uri = Uri.parse('$apiUrl?limit=$limit');
+      final response = await http.get(uri);
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        final List<dynamic> results = data['result'] ?? [];
-
-        return results.map((e) => Earthquake.fromJson(e)).toList();
-      } else {
-        throw Exception('Failed to load earthquakes');
+      if (response.statusCode != 200) {
+        throw Exception('HTTP ${response.statusCode}');
       }
+
+      final decoded = json.decode(response.body);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException('Unexpected response shape');
+      }
+
+      // API -> genelde { status: true, result: [ ... ] }
+      final List<dynamic> rawList = (decoded['result'] ??
+          decoded['data'] ??
+          decoded['events'] ??
+          []) as List<dynamic>;
+
+      final quakes = rawList
+          .whereType<Map<String, dynamic>>()
+          .map(Earthquake.fromJson)
+          .toList()
+        ..sort((a, b) => b.date.compareTo(a.date)); // yeni en üstte
+
+      return quakes;
     } catch (e) {
+      // Ekranda gösterdiğin hata mesajıyla uyumlu olsun
       throw Exception('Error fetching earthquakes: $e');
     }
   }
@@ -44,15 +60,12 @@ class EarthquakeService {
     final double dLat = _toRadians(lat2 - lat1);
     final double dLon = _toRadians(lon2 - lon1);
 
-    final double a = (dLat / 2).sin() * (dLat / 2).sin() +
-        _toRadians(lat1).cos() *
-            _toRadians(lat2).cos() *
-            (dLon / 2).sin() *
-            (dLon / 2).sin();
+    final double a = pow(sin(dLat / 2), 2) +
+        cos(_toRadians(lat1)) * cos(_toRadians(lat2)) * pow(sin(dLon / 2), 2);
 
-    final double c = 2 * a.sqrt().asin();
+    final double c = 2 * asin(sqrt(a));
     return earthRadius * c;
   }
 
-  double _toRadians(double degrees) => degrees * 3.14159265359 / 180;
+  double _toRadians(double degrees) => degrees * pi / 180;
 }

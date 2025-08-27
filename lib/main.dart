@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'core/constants/app_colors.dart';
 import 'core/services/notification_service.dart';
 import 'presentation/providers/earthquake_provider.dart';
 import 'routes/app_routes.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize services
+  // Bildirim servisini başlat (Android 13+ izin & kanal)
   await NotificationService().initialize();
 
   runApp(const DepremTurkiyeApp());
@@ -28,6 +29,7 @@ class DepremTurkiyeApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: AppColors.primary,
+          // pubspec'te Montserrat tanımlı değilse bu satırı kaldırabilirsin
           fontFamily: 'Montserrat',
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(

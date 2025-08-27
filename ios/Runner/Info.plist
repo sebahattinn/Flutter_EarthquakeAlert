@@ -45,5 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Location and Background Permissions -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Yakınınızdaki depremleri göstermek için konum bilginize ihtiyacımız var</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

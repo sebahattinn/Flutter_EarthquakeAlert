@@ -11,6 +11,8 @@ dependencies:
   
   # State Management
   provider: ^6.1.1
+  #  flutter_local_notifications: 15.0.0
+
   
   # Network
   http: ^1.1.0
@@ -18,9 +20,6 @@ dependencies:
   
   # Local Storage
   shared_preferences: ^2.2.2
-  
-  # Notifications
-  flutter_local_notifications: ^16.3.0
   
   # Location
   geolocator: ^10.1.0
@@ -38,6 +37,7 @@ dependencies:
   
   # Icons
   cupertino_icons: ^1.0.6
+  flutter_local_notifications: ^19.4.1
 
 dev_dependencies:
   flutter_test:
@@ -47,13 +47,14 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   
-  assets:
-    - assets/images/
-    - assets/icons/
+  # assets ve fonts şimdilik devre dışı bırakıldı
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
   
-  fonts:
-    - family: Montserrat
-      fonts:
-        - asset: fonts/Montserrat-Regular.ttf
-        - asset: fonts/Montserrat-Bold.ttf
-          weight: 700
+  # fonts:
+  #   - family: Montserrat
+  #     fonts:
+  #       - asset: fonts/Montserrat-Regular.ttf
+  #       - asset: fonts/Montserrat-Bold.ttf
+  #         weight: 700
