@@ -8,53 +8,72 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   # State Management
   provider: ^6.1.1
-  #  flutter_local_notifications: 15.0.0
 
-  
   # Network
   http: ^1.1.0
   dio: ^5.4.0
-  
+
   # Local Storage
   shared_preferences: ^2.2.2
-  
+
   # Location
   geolocator: ^10.1.0
   geocoding: ^2.1.1
-  
+
   # UI Components
   flutter_map: ^6.1.0
   latlong2: ^0.9.0
   shimmer: ^3.0.0
-  
+
   # Utilities
   intl: ^0.18.1
   url_launcher: ^6.2.2
   connectivity_plus: ^5.0.2
-  
+
   # Icons
   cupertino_icons: ^1.0.6
+
+  # Notifications & Charts
   flutter_local_notifications: ^19.4.1
+  fl_chart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
 
+  # Native splash (build-time tool)
+  flutter_native_splash: ^2.4.1
+
+  # Launcher icon (build-time tool)
+  flutter_launcher_icons: ^0.13.1
+
 flutter:
   uses-material-design: true
-  
-  # assets ve fonts şimdilik devre dışı bırakıldı
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
-  
-  # fonts:
-  #   - family: Montserrat
-  #     fonts:
-  #       - asset: fonts/Montserrat-Regular.ttf
-  #       - asset: fonts/Montserrat-Bold.ttf
-  #         weight: 700
+  assets:
+    - assets/images/icon_and.png
+
+# flutter_native_splash configuration (Android & iOS native açılış ekranı)
+flutter_native_splash:
+  color: "#0B1728"
+  image: assets/images/icon_and.png
+  android: true
+  ios: true
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+  android_12:
+    image: assets/images/icon_and.png
+    icon_background_color: "#0B1728"
+
+# Uygulama launcher ikonu
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/images/icon_and.png
+  adaptive_icon_background: "#0B1728"
+  adaptive_icon_foreground: assets/images/icon_and.png
+  min_sdk_android: 21
+  remove_alpha_ios: true

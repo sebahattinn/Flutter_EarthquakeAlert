@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'core/constants/app_colors.dart';
-import 'core/services/notification_service.dart';
 import 'presentation/providers/earthquake_provider.dart';
 import 'routes/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Bildirim servisini başlat (Android 13+ izin & kanal)
-  await NotificationService().initialize();
-
+  // Bildirim servisi ve ilk veri çekimi SplashScreen içinde yapılıyor.
   runApp(const DepremTurkiyeApp());
 }
 
@@ -29,7 +24,7 @@ class DepremTurkiyeApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: AppColors.primary,
-          // pubspec'te Montserrat tanımlı değilse bu satırı kaldırabilirsin
+          // pubspec’te özel font tanımlamadıysan bu satır opsiyonel
           fontFamily: 'Montserrat',
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
@@ -37,7 +32,8 @@ class DepremTurkiyeApp extends StatelessWidget {
             brightness: Brightness.light,
           ),
         ),
-        initialRoute: AppRoutes.home,
+        // Splash route ile başla
+        initialRoute: AppRoutes.splash,
         onGenerateRoute: AppRoutes.generateRoute,
       ),
     );
