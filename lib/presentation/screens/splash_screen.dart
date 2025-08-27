@@ -18,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _fade;
+  bool _navigated = false;
 
   @override
   void initState() {
@@ -30,14 +31,21 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _boot() async {
-    // Native splash zaten gösterildi; burada Flutter tarafında küçük bir bekleme ile
-    // servisleri hazırlarız.
-    await Future.wait([
-      NotificationService().initialize(),
-      context.read<EarthquakeProvider>().fetchEarthquakes(),
-      Future.delayed(const Duration(milliseconds: 800)),
+    // Bildirim + ilk veri çekimi; hata/zaman aşımında yola devam.
+    final initNotif = NotificationService().initialize().catchError((_) {});
+    final firstFetch = context
+        .read<EarthquakeProvider>()
+        .fetchEarthquakes()
+        .timeout(const Duration(seconds: 2), onTimeout: () {});
+
+    // En fazla 2.5 sn bekle; hangisi önce biterse Home’a geç.
+    await Future.any([
+      Future.wait([initNotif, firstFetch]),
+      Future.delayed(const Duration(milliseconds: 2500)),
     ]);
-    if (!mounted) return;
+
+    if (!mounted || _navigated) return;
+    _navigated = true;
     Navigator.pushReplacementNamed(context, AppRoutes.home);
   }
 
@@ -49,50 +57,69 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final bg = AppColors.primary;
+    const bg = AppColors.primary;
+
     return Scaffold(
       backgroundColor: bg,
-      body: Center(
-        child: FadeTransition(
-          opacity: _fade,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Logo
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Image.asset(
-                  'assets/images/icon_and.png',
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FadeTransition(
+                      opacity: _fade,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Logo
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              // ignore: deprecated_member_use
+                              color: Colors.white.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Image.asset(
+                              'assets/images/icon_and.png',
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Deprem Türkiye',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Hafif yükleniyor animasyonu
+                          const SizedBox(
+                            width: 28,
+                            height: 28,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.6,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text(
-                'Deprem Türkiye',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 12),
-              // Hafif yükleniyor animasyonu
-              const SizedBox(
-                width: 28,
-                height: 28,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.6,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

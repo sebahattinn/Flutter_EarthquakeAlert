@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/safe_scroll_wrapper.dart'; // <- ekle
 
 class ChecklistScreen extends StatefulWidget {
   const ChecklistScreen({super.key});
@@ -49,17 +50,23 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
   @override
   Widget build(BuildContext context) {
     final progress = _items.where((e) => e.checked).length / _items.length;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Deprem Çantası')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: LinearProgressIndicator(value: progress),
-          ),
-          Expanded(
-            child: ListView.separated(
+      // 👇 Column'ı tek bir widget olarak SafeScrollWrapper.child içine koyduk
+      body: SafeScrollWrapper(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            LinearProgressIndicator(value: progress),
+            const SizedBox(height: 12),
+
+            // 👇 ListView artık scroll ETMİYOR (SafeScrollWrapper kaydırıyor)
+            ListView.separated(
               itemCount: _items.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (ctx, i) {
                 final it = _items[i];
@@ -73,9 +80,10 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                 );
               },
             ),
-          ),
-          const SizedBox(height: 8),
-        ],
+
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

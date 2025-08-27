@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../core/constants/app_colors.dart';
 import '../../data/models/earthquake_model.dart';
 
@@ -23,10 +24,8 @@ class EarthquakeDetailScreen extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 earthquake.location,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               background: Stack(
                 fit: StackFit.expand,
@@ -79,6 +78,8 @@ class EarthquakeDetailScreen extends StatelessWidget {
               ),
             ),
           ),
+
+          // CONTENT
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -147,7 +148,7 @@ class EarthquakeDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // Action buttons
+                  // Actions
                   Row(
                     children: [
                       Expanded(
@@ -183,6 +184,8 @@ class EarthquakeDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
+                  const SizedBox(height: 12), // bottom spacing
                 ],
               ),
             ),
@@ -220,30 +223,35 @@ class EarthquakeDetailScreen extends StatelessWidget {
             ),
           ),
           const Divider(height: 1),
-          ...rows.map((row) => Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
+          ...rows.map(
+            (row) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
                       row.label,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
-                    Text(
+                  ),
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: Text(
                       row.value,
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textDark,
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -270,19 +278,18 @@ class EarthquakeDetailScreen extends StatelessWidget {
       'https://www.google.com/maps/search/?api=1&query=${earthquake.latitude},${earthquake.longitude}',
     );
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 
   void _share(Earthquake earthquake) {
-    // Implement share functionality
-    // You can add share_plus package for this
+    // İstersen share_plus ekleyip burada paylaşımı yapabilirsin.
+    // örn: Share.share('...', subject: 'Deprem');
   }
 }
 
 class _DetailRow {
   final String label;
   final String value;
-
   _DetailRow(this.label, this.value);
 }

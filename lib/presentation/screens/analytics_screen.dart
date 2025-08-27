@@ -1,3 +1,4 @@
+import 'package:earthquake_alert/presentation/widgets/safe_scroll_wrapper.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,7 @@ class AnalyticsScreen extends StatelessWidget {
           ),
           body: list.isEmpty
               ? const Center(child: Text('Veri bekleniyor…'))
-              : SingleChildScrollView(
+              : SafeScrollWrapper(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

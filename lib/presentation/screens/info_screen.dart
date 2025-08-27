@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../core/constants/app_colors.dart';
+import '../widgets/safe_scroll_wrapper.dart';
 
 class InfoScreen extends StatelessWidget {
   const InfoScreen({super.key});
@@ -13,57 +16,61 @@ class InfoScreen extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
-      body: ListView(
+      // Tek scroll için SafeScrollWrapper kullanıyoruz
+      body: SafeScrollWrapper(
         padding: const EdgeInsets.all(16),
-        children: [
-          _buildInfoSection(
-            'Deprem Anında Yapılması Gerekenler',
-            [
-              'Sakin olun ve panik yapmayın',
-              'Güvenli bir yere (masa altı, yatak yanı üçgen alanlar) sığının',
-              'Çök-Kapan-Tutun pozisyonunu alın',
-              'Pencere ve aynalardan uzak durun',
-              'Asansör kullanmayın',
-              'Deprem bitene kadar güvenli alanda kalın',
-            ],
-            Icons.warning_amber_rounded,
-            AppColors.primary,
-          ),
-          const SizedBox(height: 16),
-          _buildInfoSection(
-            'Deprem Çantası İçeriği',
-            [
-              'Su (kişi başı günde 3 litre)',
-              'Konserve ve kuru gıdalar',
-              'İlk yardım malzemeleri',
-              'El feneri ve yedek piller',
-              'Düdük',
-              'Radyo',
-              'Battaniye',
-              'Önemli evrakların fotokopileri',
-              'Nakit para',
-              'Telefon şarj aleti (powerbank)',
-            ],
-            Icons.backpack,
-            AppColors.secondary,
-          ),
-          const SizedBox(height: 16),
-          _buildInfoSection(
-            'Deprem Sonrası',
-            [
-              'Artçılardan korunun',
-              'Hasarlı binalardan uzak durun',
-              'Gaz kaçağı kontrolü yapın',
-              'Telefon hatlarını meşgul etmeyin',
-              'Resmi açıklamaları takip edin',
-              'Toplanma alanlarına gidin',
-            ],
-            Icons.info_outline,
-            AppColors.accent,
-          ),
-          const SizedBox(height: 16),
-          _buildEmergencyNumbers(),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildInfoSection(
+              'Deprem Anında Yapılması Gerekenler',
+              [
+                'Sakin olun ve panik yapmayın',
+                'Güvenli bir yere (masa altı, yatak yanı üçgen alanlar) sığının',
+                'Çök-Kapan-Tutun pozisyonunu alın',
+                'Pencere ve aynalardan uzak durun',
+                'Asansör kullanmayın',
+                'Deprem bitene kadar güvenli alanda kalın',
+              ],
+              Icons.warning_amber_rounded,
+              AppColors.primary,
+            ),
+            const SizedBox(height: 16),
+            _buildInfoSection(
+              'Deprem Çantası İçeriği',
+              [
+                'Su (kişi başı günde 3 litre)',
+                'Konserve ve kuru gıdalar',
+                'İlk yardım malzemeleri',
+                'El feneri ve yedek piller',
+                'Düdük',
+                'Radyo',
+                'Battaniye',
+                'Önemli evrakların fotokopileri',
+                'Nakit para',
+                'Telefon şarj aleti (powerbank)',
+              ],
+              Icons.backpack,
+              AppColors.secondary,
+            ),
+            const SizedBox(height: 16),
+            _buildInfoSection(
+              'Deprem Sonrası',
+              [
+                'Artçılardan korunun',
+                'Hasarlı binalardan uzak durun',
+                'Gaz kaçağı kontrolü yapın',
+                'Telefon hatlarını meşgul etmeyin',
+                'Resmi açıklamaları takip edin',
+                'Toplanma alanlarına gidin',
+              ],
+              Icons.info_outline,
+              AppColors.accent,
+            ),
+            const SizedBox(height: 16),
+            _buildEmergencyNumbers(context),
+          ],
+        ),
       ),
     );
   }
@@ -93,9 +100,8 @@ class InfoScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
             ),
             child: Row(
               children: [
@@ -155,7 +161,7 @@ class InfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmergencyNumbers() {
+  Widget _buildEmergencyNumbers(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -182,46 +188,58 @@ class InfoScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          _buildEmergencyNumber('AFAD', '122'),
-          _buildEmergencyNumber('Ambulans', '112'),
-          _buildEmergencyNumber('İtfaiye', '110'),
-          _buildEmergencyNumber('Polis', '155'),
-          _buildEmergencyNumber('Jandarma', '156'),
+          _buildEmergencyNumber(context, 'AFAD', '122'),
+          _buildEmergencyNumber(context, 'Ambulans', '112'),
+          _buildEmergencyNumber(context, 'İtfaiye', '110'),
+          _buildEmergencyNumber(context, 'Polis', '155'),
+          _buildEmergencyNumber(context, 'Jandarma', '156'),
         ],
       ),
     );
   }
 
-  Widget _buildEmergencyNumber(String label, String number) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              number,
+  Widget _buildEmergencyNumber(
+      BuildContext context, String label, String number) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => _call(number),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                number,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _call(String number) async {
+    final uri = Uri(scheme: 'tel', path: number);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }

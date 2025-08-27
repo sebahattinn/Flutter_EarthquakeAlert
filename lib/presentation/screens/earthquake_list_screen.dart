@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../core/constants/app_colors.dart';
 import '../providers/earthquake_provider.dart';
 import '../widgets/earthquake_card.dart';
+import '../widgets/safe_scroll_wrapper.dart';
 import '../../routes/app_routes.dart';
 
 class EarthquakeListScreen extends StatefulWidget {
@@ -33,109 +35,151 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
             searchQuery: _searchController.text,
           );
 
-          return Column(
-            children: [
-              // Search and filter section
-              Container(
-                padding: const EdgeInsets.all(16),
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    // Search bar
-                    TextField(
-                      controller: _searchController,
-                      onChanged: (_) => setState(() {}),
-                      decoration: InputDecoration(
-                        hintText: 'Konum ara...',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  setState(() {});
-                                },
-                              )
-                            : null,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: AppColors.background,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Magnitude filter
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Büyüklük Aralığı: ${_magnitudeRange.start.toStringAsFixed(1)} - ${_magnitudeRange.end.toStringAsFixed(1)}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        RangeSlider(
-                          values: _magnitudeRange,
-                          min: 0,
-                          max: 10,
-                          divisions: 20,
-                          activeColor: AppColors.primary,
-                          onChanged: (values) {
-                            setState(() {
-                              _magnitudeRange = values;
-                            });
-                          },
+          return SafeScrollWrapper(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(), // klavyeyi kapat
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Search & Filter
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        // Search bar
+                        TextField(
+                          controller: _searchController,
+                          onChanged: (_) => setState(() {}),
+                          decoration: InputDecoration(
+                            hintText: 'Konum ara…',
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: _searchController.text.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      _searchController.clear();
+                                      setState(() {});
+                                    },
+                                  )
+                                : null,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: AppColors.background,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
 
-              // Results count
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${filteredEarthquakes.length} deprem bulundu',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textLight,
-                      ),
+                        // Magnitude filter
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Büyüklük: ${_magnitudeRange.start.toStringAsFixed(1)} – ${_magnitudeRange.end.toStringAsFixed(1)}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _magnitudeRange =
+                                          const RangeValues(0, 10);
+                                      _searchController.clear();
+                                    });
+                                  },
+                                  child: const Text('Sıfırla'),
+                                ),
+                              ],
+                            ),
+                            RangeSlider(
+                              values: _magnitudeRange,
+                              min: 0,
+                              max: 10,
+                              divisions: 20,
+                              activeColor: AppColors.primary,
+                              onChanged: (values) {
+                                setState(() => _magnitudeRange = values);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    TextButton.icon(
-                      onPressed: () => provider.fetchEarthquakes(),
-                      icon: const Icon(Icons.refresh, size: 18),
-                      label: const Text('Yenile'),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
 
-              // Earthquake list
-              Expanded(
-                child: ListView.builder(
-                  itemCount: filteredEarthquakes.length,
-                  itemBuilder: (context, index) {
-                    final earthquake = filteredEarthquakes[index];
-                    return EarthquakeCard(
-                      earthquake: earthquake,
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        AppRoutes.earthquakeDetail,
-                        arguments: earthquake,
+                  const SizedBox(height: 12),
+
+                  // Results count + actions
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${filteredEarthquakes.length} deprem bulundu',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textLight,
+                        ),
                       ),
-                    );
-                  },
-                ),
+                      TextButton.icon(
+                        onPressed: () => provider.fetchEarthquakes(),
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: const Text('Yenile'),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Earthquake list (tek scroll: shrinkWrap + NeverScrollable)
+                  if (filteredEarthquakes.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Kriterlere uygun deprem bulunamadı.',
+                        style: TextStyle(color: AppColors.textLight),
+                      ),
+                    )
+                  else
+                    ListView.separated(
+                      itemCount: filteredEarthquakes.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final earthquake = filteredEarthquakes[index];
+                        return EarthquakeCard(
+                          earthquake: earthquake,
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.earthquakeDetail,
+                            arguments: earthquake,
+                          ),
+                        );
+                      },
+                    ),
+                ],
               ),
-            ],
+            ),
           );
         },
       ),
