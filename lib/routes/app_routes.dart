@@ -26,9 +26,9 @@ class AppRoutes {
   static const String map = '/map';
   static const String checklist = '/checklist';
 
-  // Basic generator
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-    final String? name = settings.name;
+  // ------- Basic generator -------
+  static Route<dynamic> generateRoute(RouteSettings routeSettings) {
+    final String? name = routeSettings.name;
 
     if (name == splash) {
       return MaterialPageRoute(builder: (_) => const SplashScreen());
@@ -37,13 +37,12 @@ class AppRoutes {
     } else if (name == earthquakeList) {
       return MaterialPageRoute(builder: (_) => const EarthquakeListScreen());
     } else if (name == earthquakeDetail) {
-      final earthquake = settings.arguments as Earthquake;
+      final earthquake = routeSettings.arguments as Earthquake;
       return MaterialPageRoute(
         builder: (_) => EarthquakeDetailScreen(earthquake: earthquake),
       );
     } else if (name == info) {
       return MaterialPageRoute(builder: (_) => const InfoScreen());
-      // ignore: unrelated_type_equality_checks
     } else if (name == settings) {
       return MaterialPageRoute(builder: (_) => const SettingsScreen());
     } else if (name == analytics) {
@@ -57,7 +56,7 @@ class AppRoutes {
     }
   }
 
-  // Slide transitionlu generator
+  // ------- Slide transition'lı generator -------
   static PageRouteBuilder<dynamic> _buildPageRoute({
     required Widget page,
     RouteSettings? settings,
@@ -78,39 +77,63 @@ class AppRoutes {
     );
   }
 
-  static Route<dynamic> generateRouteWithTransitions(RouteSettings settings) {
-    final String? name = settings.name;
+  static Route<dynamic> generateRouteWithTransitions(
+    RouteSettings routeSettings,
+  ) {
+    final String? name = routeSettings.name;
 
     if (name == splash) {
-      return _buildPageRoute(page: const SplashScreen(), settings: settings);
+      return _buildPageRoute(
+        page: const SplashScreen(),
+        settings: routeSettings,
+      );
     } else if (name == home) {
-      return _buildPageRoute(page: const HomeScreen(), settings: settings);
+      return _buildPageRoute(
+        page: const HomeScreen(),
+        settings: routeSettings,
+      );
     } else if (name == earthquakeList) {
       return _buildPageRoute(
-          page: const EarthquakeListScreen(), settings: settings);
+        page: const EarthquakeListScreen(),
+        settings: routeSettings,
+      );
     } else if (name == earthquakeDetail) {
-      final earthquake = settings.arguments as Earthquake;
+      final earthquake = routeSettings.arguments as Earthquake;
       return _buildPageRoute(
         page: EarthquakeDetailScreen(earthquake: earthquake),
-        settings: settings,
+        settings: routeSettings,
       );
     } else if (name == info) {
-      return _buildPageRoute(page: const InfoScreen(), settings: settings);
-      // ignore: unrelated_type_equality_checks
+      return _buildPageRoute(
+        page: const InfoScreen(),
+        settings: routeSettings,
+      );
     } else if (name == settings) {
-      return _buildPageRoute(page: const SettingsScreen(), settings: settings);
+      return _buildPageRoute(
+        page: const SettingsScreen(),
+        settings: routeSettings,
+      );
     } else if (name == analytics) {
-      return _buildPageRoute(page: const AnalyticsScreen(), settings: settings);
+      return _buildPageRoute(
+        page: const AnalyticsScreen(),
+        settings: routeSettings,
+      );
     } else if (name == map) {
-      return _buildPageRoute(page: const MapScreen(), settings: settings);
+      return _buildPageRoute(
+        page: const MapScreen(),
+        settings: routeSettings,
+      );
     } else if (name == checklist) {
-      return _buildPageRoute(page: const ChecklistScreen(), settings: settings);
+      return _buildPageRoute(
+        page: const ChecklistScreen(),
+        settings: routeSettings,
+      );
     } else {
       return _notFoundPage();
     }
   }
 
-  // Navigation helpers
+  // ------- Navigation helpers -------
   static Future<T?> navigateTo<T>(BuildContext context, String routeName,
       {Object? arguments}) {
     return Navigator.pushNamed<T>(context, routeName, arguments: arguments);
@@ -127,8 +150,11 @@ class AppRoutes {
       BuildContext context, String routeName,
       {Object? arguments}) {
     return Navigator.pushNamedAndRemoveUntil<T>(
-        context, routeName, (route) => false,
-        arguments: arguments);
+      context,
+      routeName,
+      (route) => false,
+      arguments: arguments,
+    );
   }
 
   static void goBack<T>(BuildContext context, [T? result]) {

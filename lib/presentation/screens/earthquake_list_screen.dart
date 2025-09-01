@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../core/constants/app_colors.dart';
 import '../providers/earthquake_provider.dart';
 import '../widgets/earthquake_card.dart';
@@ -16,7 +16,22 @@ class EarthquakeListScreen extends StatefulWidget {
 
 class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  // Uygulanan filtre değerleri
   RangeValues _magnitudeRange = const RangeValues(0, 10);
+  String _appliedQuery = '';
+
+  // UI akışkanlık için (yalnızca label/sürgü görseli)
+  RangeValues _uiRange = const RangeValues(0, 10);
+
+  // Debounce
+  Timer? _searchDebounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _uiRange = _magnitudeRange;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +47,7 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
           final filteredEarthquakes = provider.getFilteredEarthquakes(
             minMagnitude: _magnitudeRange.start,
             maxMagnitude: _magnitudeRange.end,
-            searchQuery: _searchController.text,
+            searchQuery: _appliedQuery,
           );
 
           return SafeScrollWrapper(
@@ -59,10 +74,24 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
                     padding: const EdgeInsets.all(12),
                     child: Column(
                       children: [
-                        // Search bar
+                        // Search bar (debounce + onSubmitted)
                         TextField(
                           controller: _searchController,
-                          onChanged: (_) => setState(() {}),
+                          textInputAction: TextInputAction.search,
+                          onChanged: (txt) {
+                            _searchDebounce?.cancel();
+                            _searchDebounce = Timer(
+                              const Duration(milliseconds: 200),
+                              () {
+                                if (!mounted) return;
+                                setState(() => _appliedQuery = txt.trim());
+                              },
+                            );
+                          },
+                          onSubmitted: (txt) {
+                            _searchDebounce?.cancel();
+                            setState(() => _appliedQuery = txt.trim());
+                          },
                           decoration: InputDecoration(
                             hintText: 'Konum ara…',
                             prefixIcon: const Icon(Icons.search),
@@ -70,8 +99,9 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
                                 ? IconButton(
                                     icon: const Icon(Icons.clear),
                                     onPressed: () {
+                                      _searchDebounce?.cancel();
                                       _searchController.clear();
-                                      setState(() {});
+                                      setState(() => _appliedQuery = '');
                                     },
                                   )
                                 : null,
@@ -84,7 +114,7 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
                         ),
                         const SizedBox(height: 12),
 
-                        // Magnitude filter
+                        // Magnitude filter (onChangeEnd ile uygula)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -92,7 +122,7 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    'Büyüklük: ${_magnitudeRange.start.toStringAsFixed(1)} – ${_magnitudeRange.end.toStringAsFixed(1)}',
+                                    'Büyüklük: ${_uiRange.start.toStringAsFixed(1)} – ${_uiRange.end.toStringAsFixed(1)}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -101,10 +131,13 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () {
+                                    _searchDebounce?.cancel();
                                     setState(() {
+                                      _uiRange = const RangeValues(0, 10);
                                       _magnitudeRange =
                                           const RangeValues(0, 10);
                                       _searchController.clear();
+                                      _appliedQuery = '';
                                     });
                                   },
                                   child: const Text('Sıfırla'),
@@ -112,12 +145,17 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
                               ],
                             ),
                             RangeSlider(
-                              values: _magnitudeRange,
+                              values: _uiRange,
                               min: 0,
                               max: 10,
                               divisions: 20,
                               activeColor: AppColors.primary,
                               onChanged: (values) {
+                                // sadece UI güncelle (hafif)
+                                setState(() => _uiRange = values);
+                              },
+                              onChangeEnd: (values) {
+                                // filtreyi şimdi uygula (ağır)
                                 setState(() => _magnitudeRange = values);
                               },
                             ),
@@ -189,6 +227,7 @@ class _EarthquakeListScreenState extends State<EarthquakeListScreen> {
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
